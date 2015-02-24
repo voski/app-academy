@@ -1,13 +1,14 @@
+require_relative 'piece.rb'
 class SlidingPiece < Piece
 
-  def initialize(options={})
+  def initialize(pos, color, board)
     super
     @diagonal
     @horizontal
     @both
   end
 
-  def moves(direction) #:diag :horiz :both
+  def moves #:diag :horiz :both
     moves = []
     case direction
     when :diagonal
@@ -130,13 +131,27 @@ end
 
 class Bishop < SlidingPiece
   attr_accessor :direction
+
   def initialize(pos, color, board)
     super
     @direction = :diagonal
   end
+end
 
+class Rook < SlidingPiece
+  attr_accessor :direction
 
+  def initialize(pos, color, board)
+    super
+    @direction = :horizontal
+  end
+end
 
+class Queen < SlidingPiece
+  attr_accessor :direction
 
-
+  def initialize(pos, color, board)
+    super
+    @direction = :both
+  end
 end

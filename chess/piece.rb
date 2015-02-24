@@ -1,4 +1,5 @@
-class Pieces
+class Piece
+  attr_accessor :pos
 
   def initialize(pos, color, board)
     @pos = pos
