@@ -7,31 +7,22 @@ class SlidingPiece < Piece
     @both
   end
 
-  def moves(direction)
+  def moves(direction) #:diag :horiz :both
     moves = []
-    SLIDE_DOWN = [0, -1]
-    SLIDE_UP =    [0 ,1]
-    SLIDE_LEFT = [-1, 0]
-    SLIDE_RIGHT = [1, 0]
-
-    generate = true
-    while generate
-      case direction
-      when :diagonal
-
-      when :horizontal
-
-
-      end
-
-      else
-
-      end
-
+    case direction
+    when :diagonal
+      moves << slide_up_right + slide_up_left + slide_down_right + slide_down_left
+    when :horizontal
+      moves << slide_right + slide_up + slide_left + slide_down
+    when :both
+      moves <<
+            slide_up_right + slide_up_left + slide_down_right + slide_down_left
+            + slide_right + slide_up + slide_left + slide_down
     end
-
+    moves
   end
 
+  private
   def slide_right
     move_right = []
     x, y = self.pos
@@ -91,7 +82,7 @@ class SlidingPiece < Piece
       x += 1
       move_ur << [x, y]
     end
-    
+
     move_ur
   end
 
@@ -138,19 +129,14 @@ end
 
 
 class Bishop < SlidingPiece
-  attr_accessor direction
-  def initialize
+  attr_accessor :direction
+  def initialize(pos, color, board)
     super
-    @direction
+    @direction = :diagonal
   end
 
-  def move_dir
-    direction
-  end
+
 
 
 
 end
-
-
-board = Baord.new
