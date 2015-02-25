@@ -1,24 +1,18 @@
 require_relative 'piece.rb'
 class SlidingPiece < Piece
 
-  def initialize(pos, color, board)
-    super
-    @diagonal
-    @horizontal
-    @both
-  end
 
   def moves #:diag :horiz :both
     moves = []
     case direction
     when :diagonal
-      moves << slide_up_right + slide_up_left + slide_down_right + slide_down_left
+      moves = (slide_up_right + slide_up_left + slide_down_right + slide_down_left)
     when :horizontal
-      moves << slide_right + slide_up + slide_left + slide_down
+      moves = (slide_right + slide_up + slide_left + slide_down)
     when :both
-      moves <<
-            slide_up_right + slide_up_left + slide_down_right + slide_down_left
-            + slide_right + slide_up + slide_left + slide_down
+      moves =
+            (slide_up_right + slide_up_left + slide_down_right + slide_down_left +
+            slide_right + slide_up + slide_left + slide_down)
     end
     moves
   end
