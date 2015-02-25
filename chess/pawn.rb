@@ -4,7 +4,7 @@ class Pawn < Piece
     color == :white ? @uni = "\u2659" : @uni = "\u265F"
 
   end
-  def valid_moves
+  def moves
     straight_moves + diagonal_moves
   end
 

@@ -28,7 +28,7 @@ class Board
 
   def checkmate?(color)
     if in_check?(color)
-      pieces_with_moves = our_pieces(color).select { |piece| !piece.valid_moves.empty? }
+      pieces_with_moves = our_pieces(color).select { |piece| !piece.moves.empty? }
       true if pieces_with_moves.empty?
     else
       false
@@ -48,6 +48,7 @@ class Board
   def safe?(pos, color) # safe iff no piece  of opposing color can move here
     other_pieces = other_pieces(color)
     safe = other_pieces.none? do |piece|
+
       piece.moves.include?(pos)
     end
 
@@ -92,7 +93,7 @@ class Board
     raise ArgumentError.new('THAT MOVE PUTS YOU IN CHECK') if start_piece.move_into_check?(end_pos)
 
 
-    if start_piece.valid_moves.include?(end_pos)
+    if start_piece.moves.include?(end_pos)
       if !start_piece.is_a?(Pawn)
         update_piece(start, end_pos)
         update_board(start, end_pos)
@@ -213,7 +214,7 @@ board.display
 # p board.check_mate?(:white)
 # board.move([3,5], [1,3])
 # board.display
- board.move([1,3], [5,3])
+ board.move([1,3], [3,3])
  board.display
 
 # board[[7,4]] = King.new([7,4], :white, board)

@@ -10,7 +10,7 @@ class King < SteppingPiece
     color == :white ? @uni = "\u2654" : @uni = "\u265A"
   end
 
-  def valid_moves
+  def moves
     x, y = pos
     possible_moves = [
       [x+1, y+1],
@@ -32,7 +32,7 @@ class Knight < SteppingPiece
     super
     color == :white ? @uni = "\u2658" : @uni = "\u265E"
   end
-  def valid_moves
+  def moves
     x, y = pos
     possible_moves = [
       [x+2, y+1],

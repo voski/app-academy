@@ -2,9 +2,9 @@ require_relative 'piece.rb'
 class SlidingPiece < Piece
 
 
-  def moves(vectors) #:diag :horiz :both
+  def moves
     moves = []
-
+    vectors = self.class::VECTORS
     vectors.each do |vector|
       current_x, current_y = pos
       vector_x, vector_y = vector
@@ -147,6 +147,7 @@ end
 
 class Bishop < SlidingPiece
   attr_accessor :direction
+  attr_reader :VECTORS
   VECTORS = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
 
   def initialize(pos, color, board)
@@ -154,34 +155,30 @@ class Bishop < SlidingPiece
     color == :white ? @uni = "\u2657" : @uni = "\u265D"
   end
 
-  def valid_moves
-    moves(VECTORS)
-  end
+
 end
 
 class Rook < SlidingPiece
   attr_accessor :direction
+  attr_reader :VECTORS
   VECTORS = [[1, 0], [0, 1], [0, -1], [-1, 0]]
 
   def initialize(pos, color, board)
     super
     color == :white ? @uni = "\u2656" : @uni = "\u265C"
   end
-  def valid_moves
-    moves(VECTORS)
-  end
+
 end
 
 class Queen < SlidingPiece
   attr_accessor :direction
+  attr_reader :VECTORS
   VECTORS = [[1, 0], [0, 1], [0, -1], [-1, 0], [1, 1], [-1, 1],[1, -1], [-1, -1]]
   def initialize(pos, color, board)
     super
     color == :white ? @uni = "\u2655" : @uni = "\u265B"
   end
 
-  def valid_moves
-    moves(VECTORS)
-  end
+
 end
 #
