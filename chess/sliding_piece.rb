@@ -2,18 +2,37 @@ require_relative 'piece.rb'
 class SlidingPiece < Piece
 
 
-  def moves #:diag :horiz :both
+  def moves(vectors) #:diag :horiz :both
     moves = []
-    case direction
-    when :diagonal
-      moves = (slide_up_right + slide_up_left + slide_down_right + slide_down_left)
-    when :horizontal
-      moves = (slide_right + slide_up + slide_left + slide_down)
-    when :both
-      moves =
-            (slide_up_right + slide_up_left + slide_down_right + slide_down_left +
-            slide_right + slide_up + slide_left + slide_down)
+
+    vectors.each do |vector|
+      current_x, current_y = pos
+      vector_x, vector_y = vector
+      scalor = 1
+      new_x = current_x + (vector_x * scalor)
+      new_y = current_y + (vector_y * scalor)
+      # debugger
+      while !off_board?([new_x, new_y]) && !ally?(board.grid[new_x][new_y])
+        p 'we in here'
+
+        moves << [new_x, new_y]
+        scalor += 1
+        new_x = current_x + (vector_x * scalor)
+        new_y = current_y + (vector_y * scalor)
+
+      end
+      moves
     end
+    # case direction
+    # when :diagonal
+    #   moves = (slide_up_right + slide_up_left + slide_down_right + slide_down_left)
+    # when :horizontal
+    #   moves = (slide_right + slide_up + slide_left + slide_down)
+    # when :both
+    #   moves =
+    #         (slide_up_right + slide_up_left + slide_down_right + slide_down_left +
+    #         slide_right + slide_up + slide_left + slide_down)
+    # end
 
     moves
   end
@@ -127,6 +146,7 @@ end
 
 class Bishop < SlidingPiece
   attr_accessor :direction
+  VECTORS = [[1, 1], [-1, 1], [1, -1], [-1, -1]]
 
   def initialize(pos, color, board)
     super
@@ -134,18 +154,15 @@ class Bishop < SlidingPiece
   end
 
   def valid_moves
-    moves = self.moves
-    moves.each do |pot_move|
-      if board[pot_move]
-        moves.delete(pot_move) if board[pos].ally?(board[pot_move])
-      end
-    end
-    moves
+
+    moves(VECTORS)
+
   end
 end
 
 class Rook < SlidingPiece
   attr_accessor :direction
+  VECTORS = [[1, 0], [0, 1], [0, -1], [-1, 0]]
 
   def initialize(pos, color, board)
     super
@@ -155,9 +172,10 @@ end
 
 class Queen < SlidingPiece
   attr_accessor :direction
-
+  VECTORS = [[1, 0], [0, 1], [0, -1], [-1, 0], [1, 1], [-1, 1],[1, -1], [-1, -1]]
   def initialize(pos, color, board)
     super
     @direction = :both
   end
 end
+#

@@ -4,6 +4,7 @@ require_relative 'stepping_piece.rb'
 require 'byebug'
 class Board
 
+  attr_reader :grid
   def initialize(dim = 8)
     @grid = Array.new(dim) { Array.new(dim) }
     # populate
@@ -154,8 +155,11 @@ class Board
 end
 
 board = Board.new
+board[[7,6]] = King.new([7,6], :white, board)
+board[[6,5]] = Rook.new([6,5], :white, board)
+
 board[[7,4]] = King.new([7,4], :white, board)
-board[[6,5]] = Bishop.new([6,5], :white, board)
+board[[5,6]] = King.new([5,6], :white, board)
 # board.in_check?(:white)
 p board[[6,5]].valid_moves
 # board.move([0,5], [6,6])
