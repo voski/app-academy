@@ -6,7 +6,7 @@ class Board
 
   def initialize(dim = 8)
     @grid = Array.new(dim) { Array.new(dim) }
-    populate
+    # populate
   end
 
   def in_check?(color)
@@ -51,9 +51,29 @@ class Board
     other_pieces
   end
 
+  def move(start, end_pos)
+    s_x , s_y = start
+    e_x , e_y = end_pos
+    # raise ArgumentError.new('NO PIECE HERE') if @grid[s_x][s_y]
+
+    # assuming move is valid for now
+    update_piece(start, end_pos)
+    update_board(start, end_pos)
 
 
+  end
 
+  def update_board(start, end_pos)
+    s_x , s_y = start
+    e_x , e_y = end_pos
+    @grid[e_x][e_y] = @grid[s_x][s_y]
+    @grid[s_x][s_y] = nil
+  end
+
+  def update_piece(start, end_pos)
+    s_x , s_y = start
+    @grid[s_x][s_y].pos = end_pos
+  end
 
 
 
@@ -143,6 +163,11 @@ class Board
 
   end
 
+  def [](coord)
+    x, y = coord
+    @grid[x][y]
+  end
+
   def []=(coord, piece)
     x, y = coord
     @grid[x][y] = piece
@@ -153,3 +178,8 @@ board = Board.new
 board[[7,4]] = King.new([7,4], :white, self)
 board[[6,5]] = Rook.new([6,5], :black, self)
 board.in_check?(:white)
+
+board.move([6,5], [6,6])
+
+p board[[6, 6]]
+p board[[6, 5 ]]
