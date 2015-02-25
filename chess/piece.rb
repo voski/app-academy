@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :pos, :color
+  attr_accessor :pos, :color, :board
 
 
 
@@ -13,13 +13,16 @@ class Piece
 
   end
 
-  def valid_move?(pos)
-    x,y = pos
+
+
+  def off_board?(pos)
+    x, y = pos
     x.between?(0,7) || y.between?(0,7)
   end
 
-
-
+  def ally?(piece)
+    @color == piece.color
+  end
 
 
 

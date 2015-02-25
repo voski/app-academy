@@ -18,7 +18,7 @@ class King < SteppingPiece
       [x-1, y],
       [x-1, y] ]
 
-      valid_moves = possible_moves.select { |move| valid_move?(move) }
+      valid_moves = possible_moves.select { |move| off_board?(move) }
 
       valid_moves
     end
@@ -40,7 +40,7 @@ class Knight < SteppingPiece
       [x-1, y-2],
       [x-1, y+2] ]
 
-    valid_moves = possible_moves.select { |move| valid_move?(move) }
+    valid_moves = possible_moves.select { |move| off_board?(move) }
 
     valid_moves
   end
