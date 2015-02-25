@@ -8,14 +8,31 @@ class Board
   attr_reader :grid
   def initialize(dim = 8)
     @grid = Array.new(dim) { Array.new(dim) }
-    populate
+  end
+
+  def dup
+
+    dup = Board.new
+    @grid.flatten.compact.each do |piece|
+      loc = piece.pos
+      dup[loc] = piece
+    end
+    dup
   end
 
   def in_check?(color)
     # find king see if any piece can get it
     king_pos = find_king(color)
     !safe?(king_pos, color)
+  end
 
+  def checkmate?(color)
+    if in_check?(color)
+      pieces_with_moves = our_pieces(color).select { |piece| !piece.valid_moves.empty? }
+      true if pieces_with_moves.empty?
+    else
+      false
+    end
   end
 
   def find_king(color)
@@ -69,14 +86,31 @@ class Board
     s_x , s_y = start
     e_x , e_y = end_pos
     # p start
+    end_piece = self[end_pos]
+    start_piece = self[start]
+    raise ArgumentError.new('NO PIECE HERE') unless start_piece
+    raise ArgumentError.new('THAT MOVE PUTS YOU IN CHECK') if start_piece.move_into_check?(end_pos)
 
-    raise ArgumentError.new('NO PIECE HERE') unless self[start]
 
-    # assuming move is valid for now
+    if start_piece.valid_moves.include?(end_pos)
+      if !start_piece.is_a?(Pawn)
+        update_piece(start, end_pos)
+        update_board(start, end_pos)
+        start_piece.toggle_moved unless start_piece.moved
+      else
+        if start_piece.attack_moves.include?(end_pos) && start_piece.enemy?(end_piece)
+          update_piece(start, end_pos)
+          update_board(start, end_pos)
+          start_piece.toggle_moved unless start_piece.moved
+        elsif start_piece.straight_moves.include?(end_pos) && !start_piece.enemy?(end_piece) # move straight
+          update_piece(start, end_pos)
+          update_board(start, end_pos)
+          start_piece.toggle_moved unless start_piece.moved
+        else
+          raise ArgumentError.new("Invalid move")
+        end
 
-    if self[start].valid_moves.include?(end_pos)
-      update_piece(start, end_pos)
-      update_board(start, end_pos)
+      end
     else
       raise ArgumentError.new("Invalid move")
     end
@@ -166,18 +200,21 @@ end
 
 board = Board.new
 
-board.display
+board.populate
 # board.move([0,1],[2,0])
 
-board[[3,4]] = Queen.new([3,4], :white, board)
-board[[3,5]] = Queen.new([3,5], :black, board)
+# board[[3,4]] = Queen.new([3,4], :black, board)
+# board[[3,5]] = King.new([3,5], :white, board)
+# board[[2,6]] = Queen.new([3,6], :black, board)
+
+
+
 board.display
-board.move([3,4],[3,5])
-board.display
-board.move([3,5], [1,3])
-board.display
-board.move([1,3], [5,3])
-board.display
+# p board.check_mate?(:white)
+# board.move([3,5], [1,3])
+# board.display
+ board.move([1,3], [5,3])
+ board.display
 
 # board[[7,4]] = King.new([7,4], :white, board)
 # board[[5,6]] = King.new([5,6], :white, board)

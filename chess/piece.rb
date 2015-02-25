@@ -1,5 +1,6 @@
 class Piece
   attr_accessor :pos, :color, :board
+  attr_reader :moved
 
   def render
     @uni.encode("UTF-8")
@@ -9,6 +10,7 @@ class Piece
     @pos = pos
     @color = color
     @board = board
+    @moved = false
   end
 
   def moves
@@ -32,6 +34,17 @@ class Piece
     @color != piece.color
   end
 
+  def toggle_moved
+    !@moved
+  end
+
+  def move_into_check?(dest) # => go to pos
+
+    dup = board.dup
+    dup[dest] , dup[pos] = dup[pos], nil
+
+    dup.in_check?(color)
+  end
 
 
 end
