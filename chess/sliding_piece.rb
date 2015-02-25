@@ -12,10 +12,11 @@ class SlidingPiece < Piece
       new_x = current_x + (vector_x * scalor)
       new_y = current_y + (vector_y * scalor)
       # debugger
-      while !off_board?([new_x, new_y]) && !ally?(board.grid[new_x][new_y])
-        p 'we in here'
-
+       while !off_board?([new_x, new_y]) && !ally?(board.grid[new_x][new_y])
         moves << [new_x, new_y]
+        if enemy?(board.grid[new_x][new_y])
+          break
+        end
         scalor += 1
         new_x = current_x + (vector_x * scalor)
         new_y = current_y + (vector_y * scalor)
@@ -150,13 +151,11 @@ class Bishop < SlidingPiece
 
   def initialize(pos, color, board)
     super
-    @direction = :diagonal
+    color == :white ? @uni = "\u2657" : @uni = "\u265D"
   end
 
   def valid_moves
-
     moves(VECTORS)
-
   end
 end
 
@@ -166,7 +165,10 @@ class Rook < SlidingPiece
 
   def initialize(pos, color, board)
     super
-    @direction = :horizontal
+    color == :white ? @uni = "\u2656" : @uni = "\u265C"
+  end
+  def valid_moves
+    moves(VECTORS)
   end
 end
 
@@ -175,7 +177,11 @@ class Queen < SlidingPiece
   VECTORS = [[1, 0], [0, 1], [0, -1], [-1, 0], [1, 1], [-1, 1],[1, -1], [-1, -1]]
   def initialize(pos, color, board)
     super
-    @direction = :both
+    color == :white ? @uni = "\u2655" : @uni = "\u265B"
+  end
+
+  def valid_moves
+    moves(VECTORS)
   end
 end
 #

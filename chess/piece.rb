@@ -1,7 +1,9 @@
 class Piece
   attr_accessor :pos, :color, :board
 
-
+  def render
+    @uni.encode("UTF-8")
+  end
 
   def initialize(pos, color, board)
     @pos = pos
@@ -25,6 +27,10 @@ class Piece
     @color == piece.color
   end
 
+  def enemy?(piece)
+    return false if piece.nil?
+    @color != piece.color
+  end
 
 
 

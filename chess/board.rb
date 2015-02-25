@@ -1,13 +1,14 @@
 require_relative 'piece.rb'
 require_relative 'sliding_piece.rb'
 require_relative 'stepping_piece.rb'
+require_relative 'pawn.rb'
 require 'byebug'
 class Board
 
   attr_reader :grid
   def initialize(dim = 8)
     @grid = Array.new(dim) { Array.new(dim) }
-    # populate
+    populate
   end
 
   def in_check?(color)
@@ -72,9 +73,13 @@ class Board
     raise ArgumentError.new('NO PIECE HERE') unless self[start]
 
     # assuming move is valid for now
-    update_piece(start, end_pos)
-    update_board(start, end_pos)
 
+    if self[start].valid_moves.include?(end_pos)
+      update_piece(start, end_pos)
+      update_board(start, end_pos)
+    else
+      raise ArgumentError.new("Invalid move")
+    end
 
   end
 
@@ -90,10 +95,21 @@ class Board
     @grid[s_x][s_y].pos = end_pos
   end
 
+  def populate_pawns(color)
+    if color == :black
+      8.times do |num|
+        self[[1,num]] = Pawn.new([1,num], color, self)
+      end
+    else
+      8.times do |num|
+        self[[6,num]] = Pawn.new([1,num], color, self)
+      end
+    end
+  end
 
   def populate
-
     # blacks
+    populate_pawns(:black)
     self[[0,0]] = Rook.new([0,0], :black, self)
     self[[0,1]] = Knight.new([0,1], :black, self)
     self[[0,2]] = Bishop.new([0,2], :black, self)
@@ -103,25 +119,8 @@ class Board
     self[[0,6]] = Knight.new([0,6], :black, self)
     self[[0,7]] = Rook.new([0,7], :black, self)
 
-    self[[1,0]] = Pawn.new([0,0], :black, self)
-    self[[1,1]] = Pawn.new([0,1], :black, self)
-    self[[1,2]] = Pawn.new([0,2], :black, self)
-    self[[1,3]] = Pawn.new([0,3], :black, self)
-    self[[1,4]] = Pawn.new([0,4], :black, self)
-    self[[1,5]] = Pawn.new([0,5], :black, self)
-    self[[1,6]] = Pawn.new([0,6], :black, self)
-    self[[1,7]] = Pawn.new([0,7], :black, self)
-
-
-
-
-
-
-
-
-
-
     # whites
+    populate_pawns(:white)
     self[[7,0]] = Rook.new([0,0], :white, self)
     self[[7,1]] = Knight.new([0,1], :white, self)
     self[[7,2]] = Bishop.new([0,2], :white, self)
@@ -130,17 +129,6 @@ class Board
     self[[7,5]] = Bishop.new([0,5], :white, self)
     self[[7,6]] = Knight.new([0,6], :white, self)
     self[[7,7]] = Rook.new([0,7], :white, self)
-
-    self[[6,0]] = Pawn.new([0,0], :white, self)
-    self[[6,1]] = Pawn.new([0,1], :white, self)
-    self[[6,2]] = Pawn.new([0,2], :white, self)
-    self[[6,3]] = Pawn.new([0,3], :white, self)
-    self[[6,4]] = Pawn.new([0,4], :white, self)
-    self[[6,5]] = Pawn.new([0,5], :white, self)
-    self[[6,6]] = Pawn.new([0,6], :white, self)
-    self[[6,7]] = Pawn.new([0,7], :white, self)
-
-
   end
 
   def [](coord)
@@ -152,16 +140,49 @@ class Board
     x, y = coord
     @grid[x][y] = piece
   end
+
+  def display
+    dis_s =  "   a  b  c  d  e  f  g  h"
+    grid.each_with_index do |row, index|
+      dis_s += " \n #{index + 1}"
+      row.each_with_index do |col, index2|
+        if col.render.nil?
+          dis_s += "   "
+        else
+          dis_s += " #{col.render} "
+        end
+      end
+
+    end
+     puts dis_s
+  end
+
+end
+class NilClass
+  def render
+    " "
+  end
 end
 
 board = Board.new
-board[[7,6]] = King.new([7,6], :white, board)
-board[[6,5]] = Rook.new([6,5], :white, board)
 
-board[[7,4]] = King.new([7,4], :white, board)
-board[[5,6]] = King.new([5,6], :white, board)
+board.display
+# board.move([0,1],[2,0])
+
+board[[3,4]] = Queen.new([3,4], :white, board)
+board[[3,5]] = Queen.new([3,5], :black, board)
+board.display
+board.move([3,4],[3,5])
+board.display
+board.move([3,5], [1,3])
+board.display
+board.move([1,3], [5,3])
+board.display
+
+# board[[7,4]] = King.new([7,4], :white, board)
+# board[[5,6]] = King.new([5,6], :white, board)
 # board.in_check?(:white)
-p board[[6,5]].valid_moves
+# p board[[6,5]].valid_moves
 # board.move([0,5], [6,6])
 
 # p board[[6, 6]]
