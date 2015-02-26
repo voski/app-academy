@@ -14,11 +14,19 @@ class Game
 
   def play
     @game_board.populate
-    until won?
-      display
-      start, dest = HumanPlayer.get_move
-      @game_board.move(start, dest)
-      display
+    begin
+      until won?
+        display
+        start, dest = HumanPlayer.get_move
+        @game_board.move(start, dest)
+        display
+      end
+    rescue ArgumentError => e
+      puts e
+      retry
+    rescue
+      puts "Try Again"
+      retry
     end
   end
 

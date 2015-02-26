@@ -88,7 +88,6 @@ class Board
 
 
   def move(start, end_pos)
-    # debugger
     s_x , s_y = start
     e_x , e_y = end_pos
     # p start
@@ -143,7 +142,7 @@ class Board
       end
     else
       8.times do |num|
-        self[[6,num]] = Pawn.new([1,num], color, self)
+        self[[6,num]] = Pawn.new([6,num], color, self)
       end
     end
   end
