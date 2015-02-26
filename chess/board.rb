@@ -3,6 +3,7 @@ require_relative 'sliding_piece.rb'
 require_relative 'stepping_piece.rb'
 require_relative 'pawn.rb'
 require 'byebug'
+
 class Board
 
   attr_reader :grid
@@ -51,7 +52,7 @@ class Board
   def safe?(pos, color) # safe iff no piece  of opposing color can move here
     other_pieces = other_pieces(color)
     safe = other_pieces.none? do |piece|
-      
+
       piece.moves.include?(pos)
     end
 
@@ -87,6 +88,7 @@ class Board
 
 
   def move(start, end_pos)
+    # debugger
     s_x , s_y = start
     e_x , e_y = end_pos
     # p start
@@ -183,7 +185,7 @@ class Board
   def display
     dis_s =  "   a  b  c  d  e  f  g  h"
     grid.each_with_index do |row, index|
-      dis_s += " \n #{index + 1}"
+      dis_s += " \n #{(index - 8).abs}"
       row.each_with_index do |col, index2|
         if col.render.nil?
           dis_s += "   "
@@ -202,32 +204,3 @@ class NilClass
     " "
   end
 end
-
-board = Board.new
-
-# board.populate
-# board.move([0,1],[2,0])
-
-board[[4,4]] = Queen.new([4,4], :black, board)
-board[[4,5]] = King.new([4,5], :white, board)
-board[[2,6]] = Queen.new([2,6], :black, board)
-board[[4,3]] = Queen.new([4,3], :black, board)
-
-
-board.display
-# board.move([4,4],[5,4])
-p board.checkmate?(:white)
-board.display
-# board.move([3,5], [1,3])
-# board.display
- # board.move([1,3], [3,3])
-
-
-# board[[7,4]] = King.new([7,4], :white, board)
-# board[[5,6]] = King.new([5,6], :white, board)
-# board.in_check?(:white)
-# p board[[6,5]].valid_moves
-# board.move([0,5], [6,6])
-
-# p board[[6, 6]]
-# p board[[6, 5 ]]
