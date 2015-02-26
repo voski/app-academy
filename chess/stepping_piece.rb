@@ -21,8 +21,11 @@ class King < SteppingPiece
       [x, y-1],
       [x-1, y],
       [x-1, y] ]
-      valid_moves = possible_moves.select { |move| !off_board?(move) && !ally?(board[move]) }
-      valid_moves
+
+      valid_moves = possible_moves.select { |move| !off_board?(move) && !ally?(board[move]) && !self.move_into_check?(move) }
+
+
+
     end
 end
 

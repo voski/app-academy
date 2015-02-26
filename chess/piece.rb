@@ -39,7 +39,7 @@ class Piece
   end
 
   def move_into_check?(dest) # => go to pos
-
+    
     dup = board.dup
     dup[dest] , dup[pos] = dup[pos], nil
 

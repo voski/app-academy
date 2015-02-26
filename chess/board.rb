@@ -15,7 +15,9 @@ class Board
     dup = Board.new
     @grid.flatten.compact.each do |piece|
       loc = piece.pos
-      dup[loc] = piece
+      color = piece.color
+
+      dup[loc] = piece.class.new(loc, color, dup)
     end
     dup
   end
@@ -27,6 +29,7 @@ class Board
   end
 
   def checkmate?(color)
+
     if in_check?(color)
       pieces_with_moves = our_pieces(color).select { |piece| !piece.moves.empty? }
       true if pieces_with_moves.empty?
@@ -48,7 +51,7 @@ class Board
   def safe?(pos, color) # safe iff no piece  of opposing color can move here
     other_pieces = other_pieces(color)
     safe = other_pieces.none? do |piece|
-
+      
       piece.moves.include?(pos)
     end
 
@@ -89,6 +92,7 @@ class Board
     # p start
     end_piece = self[end_pos]
     start_piece = self[start]
+
     raise ArgumentError.new('NO PIECE HERE') unless start_piece
     raise ArgumentError.new('THAT MOVE PUTS YOU IN CHECK') if start_piece.move_into_check?(end_pos)
 
@@ -201,21 +205,23 @@ end
 
 board = Board.new
 
-board.populate
+# board.populate
 # board.move([0,1],[2,0])
 
-# board[[3,4]] = Queen.new([3,4], :black, board)
-# board[[3,5]] = King.new([3,5], :white, board)
-# board[[2,6]] = Queen.new([3,6], :black, board)
-
+board[[4,4]] = Queen.new([4,4], :black, board)
+board[[4,5]] = King.new([4,5], :white, board)
+board[[2,6]] = Queen.new([2,6], :black, board)
+board[[4,3]] = Queen.new([4,3], :black, board)
 
 
 board.display
-# p board.check_mate?(:white)
+# board.move([4,4],[5,4])
+p board.checkmate?(:white)
+board.display
 # board.move([3,5], [1,3])
 # board.display
- board.move([1,3], [3,3])
- board.display
+ # board.move([1,3], [3,3])
+
 
 # board[[7,4]] = King.new([7,4], :white, board)
 # board[[5,6]] = King.new([5,6], :white, board)
